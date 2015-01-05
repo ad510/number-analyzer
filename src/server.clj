@@ -17,7 +17,10 @@
                [:body [:h1 (escape-html id) " is "
                         (if (zero? id) "zero"
                             (str (if (pos? id) "a positive " "a negative ")
-                                 (if (zero? (rem id 1)) "integer" "decimal")))]])
+                                 (if (zero? (rem id 1)) "integer" "decimal")))]
+                      (cond (and (pos? id) (zero? (rem id 1)))
+                            [:p "Factors of " (escape-html id) ": "
+                                (interpose ", " (filter #(zero? (rem id %)) (range 1 (inc (Math/sqrt id)))))])])
         home))))
 
 (defonce server (run-jetty #'handler {:port 8000 :join? false}))
