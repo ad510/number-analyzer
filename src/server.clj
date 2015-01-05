@@ -1,11 +1,14 @@
 (use '[ring.adapter.jetty :only [run-jetty]]
-     'hiccup.page)
+     'compojure.core
+     'hiccup.page
+     'hiccup.util)
 
-(defn handler [req]
-  {:body (html5 [:head [:title "title"]
-                       [:meta {:http-equiv "content-type" :content "text/html; charset=utf-8"}]]
-                [:body [:p "hello world"]])
-   :headers {}
-   :status 200})
+(def content-type [:meta {:http-equiv "content-type" :content "text/html; charset=utf-8"}])
+
+(defroutes handler
+  (GET "/" [] (html5 [:head [:title "title"] content-type]
+                     [:body [:p "hello world"]]))
+  (GET "/:id" [id] (html5 [:head [:title "title2"] content-type]
+                          [:body [:p "hello, " (escape-html id)]])))
 
 (defonce server (run-jetty #'handler {:port 8000 :join? false}))
