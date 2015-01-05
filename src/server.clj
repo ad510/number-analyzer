@@ -1,12 +1,16 @@
 (use '[ring.adapter.jetty :only [run-jetty]]
      'compojure.core
+     'hiccup.form
      'hiccup.page
      'hiccup.util)
 
 (def content-type [:meta {:http-equiv "content-type" :content "text/html; charset=utf-8"}])
 
-(def home (html5 [:head [:title "title"] content-type]
-                 [:body [:p "hello world"]]))
+(def home (html5 [:head [:title "Number Analyzer"] content-type]
+                 [:body [:p "Enter a number: " (text-field "number")
+                            [:button {:onclick "location = document.getElementById('number').value"} "Submit"]]]))
+;(form-to [:get ""] (text-field "number") (submit-button "Submit"))
+
 
 (defroutes handler
   (GET "/" [] home)
